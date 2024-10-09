@@ -110,3 +110,9 @@ table, td, th {
     height: 90%;
     width: 80%;
 }
+#info {
+    font-size: 1.2rem;
+    font-weight: bolder;
+    color: red;
+    transition: opacity 0.5s;
+}

@@ -1,15 +1,15 @@
 /* - - - Insulina - - - */
 
 function generarMensajeAdvertencia(periodo, glucosa, tipo) {
-    const mensajeTipo = tipo === 'HIPERGLUCEMIA' ? 'superior a 200 mg/dL' : 'inferior a 50 mg/dL';
+    const mensajeTipo = tipo === "HIPERGLUCEMIA" ? "superior a 200 mg/dL" : "inferior a 50 mg/dL";
     return `¡ADVERTENCIA!: Su valor de glucosa ${periodo + " -"} ${glucosa} mg/dL, es ${mensajeTipo} lo que supone una <strong><em>${tipo}</em></strong>. Se sugiere CONSULTA INMEDIATA.`;
 }
 
 function verificarValor(glucosa, periodo) {
     if (glucosa > 200) {
-        return generarMensajeAdvertencia(periodo, glucosa, 'HIPERGLUCEMIA');
+        return generarMensajeAdvertencia(periodo, glucosa, "HIPERGLUCEMIA");
     } else if (glucosa < 50) {
-        return generarMensajeAdvertencia(periodo, glucosa, 'HIPOGLUCEMIA');
+        return generarMensajeAdvertencia(periodo, glucosa, "HIPOGLUCEMIA");
     }
     return null;
 }
@@ -28,12 +28,12 @@ function validarLectura(glucosa, periodo) {
     return null;
 }
 
-const periodos = ['Ayunas', 'PreColacion', 'PostAlmuerzo', 'Merienda'];
+const periodos = ["Ayunas", "PreColacion", "PostAlmuerzo", "Merienda"];
 
 periodos.forEach(periodo => {
     const input = document.getElementById(`glucosa${periodo}`);
-    input.addEventListener('focus', () => {
-        document.querySelector('.aviso').textContent = "";
+    input.addEventListener("focus", () => {
+        document.querySelector(".aviso").textContent = "";
     });
 });
 
@@ -41,7 +41,7 @@ function calcularInsulina() {
     const valoresGlucosa = [];
     let alertas = [];
     let tieneErrores = false;
-    const aviso = document.querySelector('.aviso');
+    const aviso = document.querySelector(".aviso");
     aviso.textContent = "";
 
     for (let i = 0; i < periodos.length; i++) {
@@ -60,7 +60,7 @@ function calcularInsulina() {
     }
 
     if (tieneErrores) {
-        document.querySelector('.aviso').innerHTML = alertas.join('\n');
+        document.querySelector(".aviso").innerHTML = alertas.join("\n");
         return;
     }
 
@@ -76,25 +76,24 @@ function calcularInsulina() {
         insulinaTotal += dosis;
     }
 
-    let resultadoParaHTML = '<p>Insulina necesaria:</p><ul>';
+    let resultadoParaHTML = "<p>Insulina necesaria:</p><ul>";
     for (let i = 0; i < periodos.length; i++) {
         resultadoParaHTML += `<li>${periodos[i]}: ${dosisInsulina[i].toFixed(2)} unidades</li>`;
     }
     resultadoParaHTML += `<li><strong>Total diaria: ${insulinaTotal.toFixed(2)} unidades</strong></li></ul>`;
     
-    document.getElementById('resultado').innerHTML = resultadoParaHTML;
+    document.getElementById("resultado").innerHTML = resultadoParaHTML;
 
     if (alertas.length > 0) {
-        document.querySelector('.advertencia').innerHTML = alertas.join('\n');
+        document.querySelector(".advertencia").innerHTML = alertas.join("\n");
     }
 }
 
 function reiniciarFormulario() {
-    const periodos = ['Ayunas', 'PreColacion', 'PostAlmuerzo', 'Merienda'];
     for (let i = 0; i < periodos.length; i++) {
-        document.getElementById(`glucosa${periodos[i]}`).value = '';
+        document.getElementById(`glucosa${periodos[i]}`).value = "";
     }
-    document.querySelector('.aviso').innerHTML = "";
-    document.getElementById('resultado').innerHTML = "";
-    document.querySelector('.advertencia').innerHTML = "";
+    document.querySelector(".aviso").innerHTML = "";
+    document.getElementById("resultado").innerHTML = "";
+    document.querySelector(".advertencia").innerHTML = "";
 }

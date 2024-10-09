@@ -1,6 +1,6 @@
 /* - - - Registro - - - */
 
-const registros = [];
+let registros = [];
 const etiquetas = [
     "Antes del desayuno", 
     "Después del desayuno", 
@@ -11,12 +11,40 @@ const etiquetas = [
     "Antes de ir a dormir"
 ];
 
+function infoContenido(contenido) {
+    const info = document.getElementById("info");
+    info.innerText = contenido;
+    destellar(info);
+}
+
+function destellar(contenido) {
+    let intervalo;
+    let visible = true;
+    intervalo = setInterval(() => {
+        contenido.style.opacity = visible ? '0' : '1';
+        visible = !visible;
+    }, 500);
+    setTimeout(() => {
+        clearInterval(intervalo);
+        contenido.style.opacity = '1';
+        contenido.innerText = "";
+    }, 10000);
+}
+
+function guardarRegistroLS(nuevoRegistro) {
+    const registrosGuardados = JSON.parse(localStorage.getItem("registros")) || [];
+    const registrosActualizados = [...registrosGuardados, nuevoRegistro];
+    registros = registrosActualizados;
+    localStorage.setItem("registros", JSON.stringify(registrosActualizados));
+  }
+
 function guardarDatos() {
-    const fecha = document.getElementById('fechaRegistro').innerText;    
-    const diaSeleccionado = document.getElementById('diaSeleccionado').value;
+    const fecha = document.getElementById("fechaRegistro").innerText;    
+    const diaSeleccionado = document.getElementById("diaSeleccionado").value;
+    const mili = new Date().getTime();    
 
     if (!fecha || !diaSeleccionado) {
-        alert('Por favor, selecciona un día de la semana para tu registro.');
+        infoContenido("< < < < < Por favor, selecciona un día de la semana para tu registro.");
         return;
     }
 
@@ -27,39 +55,39 @@ function guardarDatos() {
 
     const niveles = Array.from(document.querySelectorAll(`#${diaSeleccionado} .glucose`))
         .map(input => parseFloat(input.value) || null);    
-    registros.push({ fechaIngreso: fecha, diaRegistrado: diaSeleccionado, niveles });
+    const registroJSON = { fechaIngreso: fecha, diaRegistrado: diaSeleccionado, niveles };
+    guardarRegistroLS(registroJSON);
     hacerOtroRegistro();
     mostrarRegistros();
-    alert('Registros guardados exitosamente!!.');
+    infoContenido("¡ ¡ ¡ ¡ ¡ ¡ REGISTROS GUARDADOS EXITOSAMENTE ! ! ! ! ! !.");
 }
 
 function mostrarRegistros() {
     const registroDiario = document.getElementById("registroDiario");
-    registroDiario.innerHTML = '';
-    const tabla = document.createElement('table');
-    const encabezados = ['Fecha Ingreso', 'Día Registrado', etiquetas[0], etiquetas[1], etiquetas[2], etiquetas[3], etiquetas[4], etiquetas[5], etiquetas[6]];
-    const filaEncabezados = document.createElement('tr');
+    registroDiario.innerHTML = "";
+    const tabla = document.createElement("table");
+    const encabezados = ["Fecha Ingreso", "Día Registrado", etiquetas[0], etiquetas[1], etiquetas[2], etiquetas[3], etiquetas[4], etiquetas[5], etiquetas[6]];
+    const filaEncabezados = document.createElement("tr");
     encabezados.forEach(encabezado => {
-        const th = document.createElement('th');
+        const th = document.createElement("th");
         th.innerText = encabezado;
         filaEncabezados.appendChild(th);
     });
     tabla.appendChild(filaEncabezados);
-
     registros.forEach(registro => {
-        const fila = document.createElement('tr');
+        const fila = document.createElement("tr");
         
-        const tdFecha = document.createElement('td');
+        const tdFecha = document.createElement("td");
         tdFecha.innerText = registro.fechaIngreso;
         fila.appendChild(tdFecha);
 
-        const tdDia = document.createElement('td');
+        const tdDia = document.createElement("td");
         tdDia.innerText = registro.diaRegistrado;
         fila.appendChild(tdDia);
 
         etiquetas.forEach((etiqueta, index) => {
-            const tdNivel = document.createElement('td');
-            const nivel = registro.niveles[index] !== undefined ? `${registro.niveles[index]} mg/dL` : 'N/A';
+            const tdNivel = document.createElement("td");
+            const nivel = registro.niveles[index] !== undefined ? `${registro.niveles[index]} mg/dL` : "N/A";
             tdNivel.innerText = nivel;
             fila.appendChild(tdNivel);
         });
@@ -70,52 +98,53 @@ function mostrarRegistros() {
 }
 
 function hacerOtroRegistro() {
-    document.getElementById('formularios').innerHTML = '';
+    document.getElementById("formularios").innerHTML = "";
 }
 
 function mostrarFormulario(dia) {
-    
-    const formulariosDiv = document.getElementById('formularios');
-    formulariosDiv.innerHTML = '';
+    document.getElementById("info").innerText = "";
+    const formulariosDiv = document.getElementById("formularios");
+    formulariosDiv.innerHTML = "";
 
     if (dia) {
-        formulariosDiv.style.display = 'block';
-        const formulario = document.createElement('div');
-        formulario.className = 'formulario-dia';
+        formulariosDiv.style.display = "block";
+        const formulario = document.createElement("div");
+        formulario.className = "formulario-dia";
         formulario.id = dia;
 
-        const titulo = document.createElement('h3');
+        const titulo = document.createElement("h3");
         titulo.textContent = dia;
         formulario.appendChild(titulo);
 
         etiquetas.forEach(etiqueta => {
-            const label = document.createElement('label');
+            const label = document.createElement("label");
             label.textContent = `${etiqueta}: `;
-            const input = document.createElement('input');
-            input.type = 'number';
+            const input = document.createElement("input");
+            input.type = "number";
             input.id = `${etiqueta}`;
-            input.step = '1';
-            input.className = 'glucose';
-            input.placeholder = 'valor de 20 a 300 (mg/dL)';
+            input.step = "1";
+            input.className = "glucose";
+            input.placeholder = "valor de 20 a 300 (mg/dL)";
             input.min = 20;
             input.max = 300;
             input.required = true;
+            input.addEventListener("focus", () => infoContenido(""));
             label.appendChild(input);
             formulario.appendChild(label);
         });
 
         formulariosDiv.appendChild(formulario);
     } else {
-        formulariosDiv.style.display = 'none';
+        formulariosDiv.style.display = "none";
     }
 }
 
 function validarFormulario(formulario) {
-    const inputs = formulario.querySelectorAll('.glucose');
+    const inputs = formulario.querySelectorAll(".glucose");
     for (const input of inputs) {
         const valor = parseFloat(input.value);
         if (isNaN(valor) || valor < 20 || valor > 300) {
-            alert(`El valor "${input.id}", debe ser numérico y estar entre 20 y 300 (mg/dL).`);
+            infoContenido(`< < < < < < El valor "${input.id}", debe ser numérico y estar entre 20 y 300 (mg/dL).`);
             return false;
         }
     }
@@ -141,7 +170,7 @@ function formatearFecha(fecha) {
 function mostrarFecha() {
     const fechaActual = new Date();
     let fechaFormateada =  formatearFecha(fechaActual);
-    const fechaRegistro = document.getElementById('fechaRegistro') || "";
+    const fechaRegistro = document.getElementById("fechaRegistro") || "";
     fechaRegistro.textContent = fechaFormateada;
 }
 
