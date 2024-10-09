@@ -57,9 +57,9 @@ function guardarDatos() {
         .map(input => parseFloat(input.value) || null);    
     const registroJSON = { fechaIngreso: fecha, diaRegistrado: diaSeleccionado, niveles };
     guardarRegistroLS(registroJSON);
+    infoContenido("¡ ¡ ¡ ¡ ¡ ¡ REGISTROS GUARDADOS EXITOSAMENTE ! ! ! ! ! !.");
     hacerOtroRegistro();
     mostrarRegistros();
-    infoContenido("¡ ¡ ¡ ¡ ¡ ¡ REGISTROS GUARDADOS EXITOSAMENTE ! ! ! ! ! !.");
 }
 
 function mostrarRegistros() {
