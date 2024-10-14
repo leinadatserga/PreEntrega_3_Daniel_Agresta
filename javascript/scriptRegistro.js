@@ -10,9 +10,8 @@ const etiquetas = [
     "Después de la cena", 
     "Antes de ir a dormir"
 ];
-console.log(registros);
-
 registros.length == 0 ?  document.getElementById("registroDiario").innerText = "> > > > > > No hay registros que mostrar " : mostrarRegistros();
+
 function infoContenido(contenido) {
     const info = document.getElementById("info");
     info.innerText = contenido;
