@@ -1,6 +1,6 @@
 /* - - - Registro - - - */
 
-let registros = [];
+let registros = JSON.parse(localStorage.getItem("registros")) || [];
 const etiquetas = [
     "Antes del desayuno", 
     "Después del desayuno", 
@@ -10,7 +10,9 @@ const etiquetas = [
     "Después de la cena", 
     "Antes de ir a dormir"
 ];
+console.log(registros);
 
+registros.length == 0 ?  document.getElementById("registroDiario").innerText = "> > > > > > No hay registros que mostrar " : mostrarRegistros();
 function infoContenido(contenido) {
     const info = document.getElementById("info");
     info.innerText = contenido;
@@ -158,13 +160,13 @@ function redirigir() {
 function formatearFecha(fecha) {
     const dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
     const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-    
+    const minutos = fecha.getMinutes();
     const diaSemana = dias[fecha.getDay()];
     const dia = fecha.getDate();
     const mes = meses[fecha.getMonth()];
     const año = fecha.getFullYear();
-    
-    return `${diaSemana} ${dia} de ${mes} de ${año}`;
+    const hora = fecha.getHours();
+    return `${diaSemana} ${dia} de ${mes} de ${año} - ${hora}:${minutos}`;
 }
 
 function mostrarFecha() {
